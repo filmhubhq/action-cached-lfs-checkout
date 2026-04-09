@@ -124,7 +124,8 @@ runs:
       shell: bash
 
     # Don't leave behind temp files in case build system checks for dirty workspace
-    - name: Cleanup Temp Files
+    - name: Clean up temp files
+      if: always()
       run: |
         rm .lfs-assets-id-unsorted
         rm .lfs-assets-id
