@@ -115,13 +115,16 @@ runs:
         path: |
           .git/lfs
           ${{ steps.cache-paths.outputs.CACHE_PATHS }}
-        key: lfs-${{ hashFiles('.lfs-assets-id') }}-v2
+        key: lfs-v3-${{ inputs.repository }}-${{ hashFiles('.lfs-assets-id') }}
+        restore-keys: lfs-v3-${{ inputs.repository }}-
         enableCrossOsArchive: ${{ inputs.enableCrossOsArchive }}
 
     - name: Git LFS Pull
       run: |
         git lfs pull --include "${{ inputs.include }}" --exclude "${{ inputs.exclude }}"
         git submodule foreach --quiet git lfs pull --include "${{ inputs.include }}" --exclude "${{ inputs.exclude }}"
+        git lfs prune
+        git submodule foreach git lfs prune
       shell: bash
 
     # Don't leave behind temp files in case build system checks for dirty workspace
