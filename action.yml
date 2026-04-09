@@ -103,7 +103,7 @@ runs:
           done < <(git config --file .gitmodules --get-regexp path | awk '{ print $2 }')
         fi
 
-        echo "CACHE_PATHS=$CACHE_PATHS" >> $GITHUB_OUTPUT
+        echo "CACHE_PATHS=$CACHE_PATHS" >> "$GITHUB_OUTPUT"
       id: cache-paths
       shell: bash
 
