@@ -85,9 +85,10 @@ runs:
 
     - name: Create LFS file list
       run: |
-        git lfs ls-files --long --include "${{ inputs.include }}" --exclude "${{ inputs.exclude }}" | cut -d ' ' -f1 > .lfs-assets-id-unsorted
-        git submodule foreach --quiet git lfs ls-files --long --include "${{ inputs.include }}" --exclude "${{ inputs.exclude }}" | cut -d ' ' -f1 >> .lfs-assets-id-unsorted
-        sort .lfs-assets-id-unsorted > .lfs-assets-id
+        {
+          git lfs ls-files --long --include "${{ inputs.include }}" --exclude "${{ inputs.exclude }}"
+          git submodule foreach --quiet git lfs ls-files --long --include "${{ inputs.include }}" --exclude "${{ inputs.exclude }}"
+        } | cut -d ' ' -f1 | sort -u > .lfs-assets-id
       shell: bash
 
     - name: Create Submodule LFS Cache Paths
@@ -126,7 +127,5 @@ runs:
     # Don't leave behind temp files in case build system checks for dirty workspace
     - name: Clean up temp files
       if: always()
-      run: |
-        rm .lfs-assets-id-unsorted
-        rm .lfs-assets-id
+      run: rm .lfs-assets-id
       shell: bash
