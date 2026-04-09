@@ -86,7 +86,7 @@ runs:
     - name: Create LFS file list
       run: |
         git lfs ls-files --long --include "${{ inputs.include }}" --exclude "${{ inputs.exclude }}" | cut -d ' ' -f1 > .lfs-assets-id-unsorted
-        git submodule foreach git lfs ls-files --long --include "${{ inputs.include }}" --exclude "${{ inputs.exclude }}" | cut -d ' ' -f1 >> .lfs-assets-id-unsorted
+        git submodule foreach --quiet git lfs ls-files --long --include "${{ inputs.include }}" --exclude "${{ inputs.exclude }}" | cut -d ' ' -f1 >> .lfs-assets-id-unsorted
         sort .lfs-assets-id-unsorted > .lfs-assets-id
       shell: bash
 
@@ -120,7 +120,7 @@ runs:
     - name: Git LFS Pull
       run: |
         git lfs pull --include "${{ inputs.include }}" --exclude "${{ inputs.exclude }}"
-        git submodule foreach git lfs pull --include "${{ inputs.include }}" --exclude "${{ inputs.exclude }}"
+        git submodule foreach --quiet git lfs pull --include "${{ inputs.include }}" --exclude "${{ inputs.exclude }}"
       shell: bash
 
     # Don't leave behind temp files in case build system checks for dirty workspace
